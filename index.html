@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gün Batımı ve Gece Geçişi</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 200%;
+        }
+
+        .sky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            transition: background-color 1s;
+        }
+
+        .day {
+            background-color: #87ceeb;
+        }
+
+        .night {
+            background-color: #2b3a47;
+        }
+
+        .mountain {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            z-index: 3;
+
+        }
+
+        .sun,
+        .moon {
+            position: fixed;
+            transition: top 1s, left 1s, opacity 1s;
+            width: 80px;
+            z-index: 2;
+
+        }
+
+        .sun {
+            top: 10%;
+            width: 10%;
+            left: 8%;
+            transform: translateX(-50%);
+        }
+
+        .moon {
+            top: 100%;
+            right: 10%;
+            transform: translateX(-60%);
+            opacity: 0;
+        }
+
+        .bird {
+            position: fixed;
+            bottom: 70%;
+            width: 200px;
+            z-index: 4;
+            transition: bottom 2s;
+        }
+
+        .cloud {
+            position: fixed;
+            top: 10%;
+            width: 120px;
+            opacity: 1;
+            transition: opacity 1s, transform 1.5s;
+            z-index: 3;
+        }
+
+        .cloud-1 {
+            left: 10%;
+        }
+
+        .cloud-2 {
+            left: 30%;
+        }
+
+        .cloud-3 {
+            left: 60%;
+        }
+
+        .cloud-4 {
+            left: 80%;
+        }
+
+        @keyframes fly {
+            0% {
+                transform: translateX(-100px);
+            }
+
+            100% {
+                transform: translateX(100vw);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sky day"></div>
+
+    <div class="sun">
+        <img src="https://purepng.com/public/uploads/thumbnail/purepng.com-sunsunlightrayssolar-1411527181584f6qug.png"
+            alt="Güneş" width="120px">
+    </div>
+    <div class="moon">
+        <img src="https://purepng.com/public/uploads/thumbnail/purepng.com-moonmoonastronomical-bodyfifth-largest-natural-satellitenatural-satellitemoon-light-1411527067051x36xe.png"
+            alt="Ay" width="80px">
+    </div>
+
+    <img src="https://pngimg.com/d/mountain_PNG1.png" alt="Dağ Manzarası" class="mountain">
+
+    <!-- Bulutlar -->
+    <img src="https://www.bulutkombiservisi.com/images/bulut.png" alt="Bulut" class="cloud cloud-1">
+    <img src="https://www.bulutkombiservisi.com/images/bulut.png" alt="Bulut" class="cloud cloud-2">
+    <img src="https://www.bulutkombiservisi.com/images/bulut.png" alt="Bulut" class="cloud cloud-3">
+    <img src="https://www.bulutkombiservisi.com/images/bulut.png" alt="Bulut" class="cloud cloud-4">
+
+    <img src="https://i.pinimg.com/originals/0f/e9/ba/0fe9ba11a0a823d6b051bc5e2575fe62.gif" alt="Kuş" class="bird">
+    <img src="https://i.pinimg.com/originals/0f/e9/ba/0fe9ba11a0a823d6b051bc5e2575fe62.gif" alt="Kuş" class="bird"
+        style="animation-delay: 3s;">
+    <script>
+        window.addEventListener('scroll', function ()
+        {
+            const scrollPosition = window.scrollY;
+            const sky = document.querySelector('.sky');
+            const sun = document.querySelector('.sun');
+            const moon = document.querySelector('.moon');
+            const birds = document.querySelectorAll('.bird');
+            const clouds = document.querySelectorAll('.cloud');
+
+            let sunTop = 10 + scrollPosition * 0.2;
+            let moonTop = Math.max(10, 100 - scrollPosition * 0.2);
+            sun.style.top = `${sunTop}%`;
+            moon.style.top = `${moonTop}%`;
+
+            if (scrollPosition > 250) {
+                sun.style.opacity = "0";
+                moon.style.opacity = "1";
+            } else {
+                moon.style.opacity = "0";
+                sun.style.opacity = "1";
+            }
+
+
+            if (scrollPosition > 200) {
+                sky.classList.remove('day');
+                sky.classList.add('night');
+                birds.forEach(bird => bird.classList.add('hidden'));
+            } else {
+                sky.classList.remove('night');
+                sky.classList.add('day');
+                birds.forEach(bird => bird.classList.remove('hidden'));
+            }
+
+
+            clouds.forEach((cloud, index) =>
+            {
+                cloud.style.transform = `translateX(${scrollPosition * (index + 1) * 0.2}px)`;
+                cloud.style.opacity = `${1 - scrollPosition / 400}`;
+            });
+
+
+            birds.forEach(bird =>
+            {
+                bird.style.bottom = `${scrollPosition * 0.2 + 30}%`;
+                bird.style.animation = 'fly 8s infinite';
+            });
+        });
+    </script>
+</body>
+
+</html>
